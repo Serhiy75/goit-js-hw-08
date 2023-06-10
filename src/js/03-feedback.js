@@ -2,9 +2,6 @@ import throttle from 'lodash.throttle';
 
 const form = document.querySelector('feedback-form');
 const storageKey = 'feedback-form-state';
-const throttledSaveStateToLocalStorage = throttle(saveStateToLocalStorage, 500);
-form.addEventListener('input', throttledSaveStateToLocalStorage);
-form.addEventListener('submit', handlSubmit);
 
 function saveStateToLocalStorage() {
     const state = {};
@@ -33,4 +30,5 @@ function handlSubmit(event) {
     form.reset();
 };
 
-
+form.addEventListener('input', throttle(saveStateToLocalStorage, 500));
+form.addEventListener('submit', handlSubmit);
