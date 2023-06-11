@@ -4,44 +4,60 @@ const form = document.querySelector(".feedback-form");
 const storageKey = "feedback-form-state";
 
 function saveStateToLocalStorage() {
-  const state = {};
-  for (const element of form.elements) {
-    if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
-      state[element.name] = element.value;
+    try {
+        const state = {};
+        for (const element of form.elements) {
+            if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
+                state[element.name] = element.value;
+            }
+        }
+        localStorage.setItem(storageKey, JSON.stringify(state));
+    } catch (error) {
+        console.error('Error with saveState function', error);
     }
-  }
-  localStorage.setItem(storageKey, JSON.stringify(state));
 }
 
 function restoreStateFromLocalStorage() {
-  const state = JSON.parse(localStorage.getItem(storageKey));
-  if (state) {
-    for (const element of form.elements) {
-      if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
-        element.value = state[element.name] || "";
-      }
-    }
-  }
+  try {
+    const state = JSON.parse(localStorage.getItem(storageKey));
+        if (state) {
+            for (const element of form.elements) {
+                if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
+                    element.value = state[element.name] || "";
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error with restoreState', error);
+    };
 }
 
 function clearStateFromLocalStorage() {
-  localStorage.removeItem(storageKey);
+  try {
+    localStorage.removeItem(storageKey);
+  } catch (error) {
+    console.error('Error with clearState', error);
+  }
 }
 
 function handleSubmit(event) {
   event.preventDefault();
 
-  const state = {};
-  for (const element of form.elements) {
-    if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
-      state[element.name] = element.value;
+    try {
+        const state = {};
+        for (const element of form.elements) {
+            if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
+                state[element.name] = element.value;
+            }
+        }
+
+        console.log(state);
+
+        clearStateFromLocalStorage();
+        form.reset();
+    } catch (error) {
+        console.error('Error with handleSubmit', error);
     }
-  }
-
-  console.log(state);
-
-  clearStateFromLocalStorage();
-  form.reset();
 }
 
 const throttledSaveStateToLocalStorage = throttle(saveStateToLocalStorage, 500);
